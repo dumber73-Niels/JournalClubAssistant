@@ -18,3 +18,4 @@ eval/**/*_full.txt
 eval/**/*_methods.txt
 eval/**/*.xml
 eval/**/*.jsonl
+eval/**/*.pdf
