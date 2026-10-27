@@ -12,3 +12,9 @@ __pycache__/
 
 # OS
 .DS_Store
+
+# Local-model test inputs/outputs (article text, model outputs)
+eval/**/*_full.txt
+eval/**/*_methods.txt
+eval/**/*.xml
+eval/**/*.jsonl
