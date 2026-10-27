@@ -19,3 +19,4 @@ eval/**/*_methods.txt
 eval/**/*.xml
 eval/**/*.jsonl
 eval/**/*.pdf
+eval/license_survey/grades.json
