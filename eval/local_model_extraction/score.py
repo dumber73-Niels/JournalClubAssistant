@@ -5,6 +5,7 @@
 # quotes: exact = whole quote is a contiguous piece of the input; sentence-level = each sentence is; near = a sentence matches >=90% of its characters in one run.
 import json,sys,re,unicodedata,collections,difflib
 def norm(s): return re.sub(r'\s+',' ',unicodedata.normalize('NFKC',s)).strip().lower()
+def has(k,t): return k in t or k.replace(' ','') in t.replace(' ','')   # OCR often drops spaces ("4 mm" -> "4mm")
 TRUTH={ # present: key strings that must appear in answer or quote; absent: None
  'S1':['253','dimethyl sulfoxide'],'S2':['three rats','retro-orbital','2, 3, and 4 weeks'],'S3':['465.4','97.1'],'S4':None,
  'K1':['apex','100'],'K2':['cotton','7 days'],'K3':None,'K4':None,'C1':None,'C2':['pubmed','embase'],
@@ -39,9 +40,9 @@ for r in rows:
         if not found: s['absent_correct']+=1
         else: s['absent_false_positive']+=1; print('FALSE POSITIVE',tag,q,'|',(p.get('answer') or '')[:120])
     else:
-        if not all(k in text for k in key): s['present_input_damaged']+=1; print('INPUT DAMAGED',tag,q,[k for k in key if k not in text]); continue
+        if not all(has(k,text) for k in key): s['present_input_damaged']+=1; print('INPUT DAMAGED',tag,q,[k for k in key if not has(k,text)]); continue
         s['present_n']+=1
-        if found and all(k in ans for k in key): s['present_correct']+=1
+        if found and all(has(k,ans) for k in key): s['present_correct']+=1
         else: print('MISS',tag,q,'found=',found,'|',(p.get('answer') or '')[:120])
     s['sec']+=r['sec']; s['prompt_tokens']+=(r['usage'] or {}).get('prompt_tokens',0)
 for tag,s in sorted(stat.items()): print(tag,dict(s))
